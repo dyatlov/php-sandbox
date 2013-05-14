@@ -36,28 +36,37 @@ Example:
 require 'PHPValidator.php';
 
 $code = <<<PHP
-$b = 1;
-$c = 2;
-$a = $b + $c;
-echo $a;
+\$b = 1;
+\$c = 2;
+\$a = \$b + \$c;
+echo \$a;
 
 class test {
-	public function __construct() {
-		echo 'construct';
-	}
-	public function foo($num) {
-		var_dump($num);
-	}
+    public function __construct() {
+        echo 'construct';
+    }
+    public function foo(\$num) {
+        var_dump(\$num);
+    }
 }
 
-$test = new test();
-$test->foo($a);
+\$test = new test();
+\$test->foo(\$a);
 PHP;
 
 // validate the code
 $validator = new Ext_Sandbox_PHPValidator();
-echo 'Status of validation is: ' . var_export(
-// we enable only one function - echo, all others will throw error
-$validator->validatePHPCode( $code, array('echo'), true)
-, true);
+
+try
+{
+    // we enable only one function - echo, all others will throw error
+    $validator->validatePHPCode( $code, array('echo'), true);
+    $status = 'passed';
+}
+catch(Exception $ex)
+{
+    $status = $ex->getMessage();
+}
+
+echo 'Status of validation is: ' . $status;
 ```
